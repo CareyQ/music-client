@@ -41,8 +41,8 @@ import Info from '../components/sidebar/Info.vue'
 
 .content
   overflow-y: auto
-  padding: 8px 8px 30px
-  height: calc(100% - 76px)
+  padding: 8px
+  height: calc(100% - 60px)
 
   &::-webkit-scrollbar
     width: 6px
