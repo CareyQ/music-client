@@ -1,0 +1,29 @@
+{
+  "extends": ["standard"],
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@babel/eslint-parser",
+    "requireConfigFile": false
+  },
+  "plugins": ["vue"],
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "space-before-function-paren": "off",
+    "vue/html-closing-bracket-newline": [
+      "error",
+      {
+        "singleline": "never",
+        "multiline": "always"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "processor": "vue/.vue"
+    }
+  ]
+}

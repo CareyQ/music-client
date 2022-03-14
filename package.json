@@ -1,0 +1,29 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "main": "src/main/index.js",
+  "scripts": {
+    "dev": "concurrently vite \"npm run electron:dev\"",
+    "electron:dev": "electron .",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "needle": "^3.0.0",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.2.0",
+    "concurrently": "^7.0.0",
+    "electron": "^17.1.2",
+    "electron-builder": "^22.14.13",
+    "electron-reload": "^2.0.0-alpha.1",
+    "eslint": "^8.10.0",
+    "eslint-plugin-vue": "^8.5.0",
+    "pinia": "^2.0.11",
+    "stylus": "^0.56.0",
+    "vite": "^2.8.0",
+    "vue-router": "^4.0.12"
+  }
+}
