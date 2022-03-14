@@ -36,6 +36,48 @@ export const singers = () => {
   })
 }
 
+/**
+ * 歌单详情
+ * @param {*} id 歌单 ID
+ */
+export const listDetail = async (id) => {
+  let data = {
+    id: id,
+    n: 100000,
+    s: 8
+  }
+  
+  const { playlist } = await request('https://music.163.com/api/v6/playlist/detail', {
+    method: 'POST',
+    headers: buildHeaders(),
+    data: builderData(data, 'api')
+  })
+  const result = {
+    name: playlist.name,
+    picUrl: playlist.coverImgUrl,
+    createTime: playlist.createTime,
+    updateTime: playlist.updateTime,
+    desc: playlist.description,
+    tags: playlist.tags,
+    songCount: playlist.trackCount,
+    authorId: playlist.creator.userId,
+    authorName: playlist.creator.nickname
+  }
+  const songIds = playlist.trackIds.map((e) => e.id)
+  const params = '[' + songIds.map((id) => '{"id":' + id + '}').join(',') + ']'
+  data = {
+    c: params
+  }
+  const songsDetail = await request('https://music.163.com/weapi/v3/song/detail', {
+    method: 'POST',
+    headers: buildHeaders(),
+    data: builderData(data, 'weapi')
+  })
+  result.songsDetail = songsDetail.songs
+  result.privileges = songsDetail.privileges
+  return result
+}
+
 const builderData = (data, type) => {
   let params = {}
   if (type === 'weapi') {

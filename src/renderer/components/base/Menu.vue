@@ -1,10 +1,10 @@
 <script setup>
-import { Routers } from '@renderer/router/modules/routers'
+import { Menu } from '@renderer/router/modules/menu'
 </script>
 
 <template>
   <div class="menu">
-    <template v-for="(item, index) in Routers" :key="index">
+    <template v-for="(item, index) in Menu" :key="index">
       <router-link v-slot="{ navigate }" :to="item.path" custom>
         <span class="menu-item top-bg" role="link" @click="navigate">
           <i :class="'iconfont icon-' + item.meta?.icon"></i>

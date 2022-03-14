@@ -1,4 +1,5 @@
 <script>
+import { useRouter } from 'vue-router'
 import { numberFormat } from '@renderer/utils/util'
 export default {
   name: 'SongListItem',
@@ -11,15 +12,21 @@ export default {
   setup(props) {
     const playCount = (val) => numberFormat(val)
 
+    const router = useRouter()
+    const toListDetail = (id) => {
+      router.push({path: '/listDetail', query: { id: id }})
+    }
+
     return {
-      playCount
+      playCount,
+      toListDetail
     }
   }
 }
 </script>
 
 <template>
-  <div class="song-list-item">
+  <div class="song-list-item" @click="toListDetail(id)">
     <div class="item-inner">
       <img :src="picUrl" :alt="name" class="picUrl" />
       <span class="count">{{ playCount(count) }}</span>

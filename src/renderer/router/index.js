@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import BasicLayout from '@renderer/layout/BaseicLayout.vue'
-import { Routers } from './modules/routers'
+import { Menu } from './modules/menu'
+import { Routers } from './modules/other'
 
 const routes = [
   {
@@ -8,7 +9,7 @@ const routes = [
     name: 'index',
     redirect: '/home',
     component: BasicLayout,
-    children: [...Routers]
+    children: [...Menu, ...Routers]
   }
 ]
 

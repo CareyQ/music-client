@@ -1,4 +1,4 @@
-const Routers = [
+const Menu = [
   {
     path: '/home',
     name: 'home',
@@ -46,4 +46,4 @@ const Routers = [
   }
 ]
 
-export { Routers }
+export { Menu }
