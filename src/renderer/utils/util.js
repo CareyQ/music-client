@@ -1,7 +1,8 @@
 export const formatTime = (time) => {
   if (time) {
+    const hours = time % (1000 * 60)
     const minutes = Math.floor(time / 60000)
-    const seconds = (time % 60000) / 1000
+    const seconds = Math.floor((time % 60000) / 1000)
     return minutes + ':' + (seconds < 10 ? '0' : '') + seconds.toFixed(0)
   }
   return ''
@@ -60,4 +61,18 @@ export const numberFormat = (val) => {
   }
   i = Math.floor(Math.log(val) / Math.log(factor))
   return (val / Math.pow(factor, i)).toFixed(2) + sizes[i]
+}
+
+/**
+ * 封装为通用歌曲实体
+ */
+export const convert = (vo, url) => {
+  return {
+    id: vo.id,
+    name: vo.name,
+    url: url,
+    duration: vo.dt,
+    authors: vo.ar,
+    picUrl: vo.al.picUrl
+  }
 }

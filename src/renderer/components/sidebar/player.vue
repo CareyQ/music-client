@@ -1,24 +1,72 @@
-<script setup>
-import { buildPrograssData } from '@renderer/utils/util'
-const prograssData = buildPrograssData(3, 22, 27)
-const cover = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202002%2F05%2F20200205235030_rANxE.png&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648912994&t=0cfac58d551c1f7b1ad4bc807b474c40'
+<script>
+import { computed, ref } from 'vue'
+import { buildPrograssData, formatTime } from '@renderer/utils/util'
+import { useCurrentStore } from '@store/modules/current'
+
+export default {
+  setup() {
+    const currentStore = useCurrentStore()
+    const prograssData = buildPrograssData(3, 22, 27)
+    const cover = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202002%2F05%2F20200205235030_rANxE.png&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648912994&t=0cfac58d551c1f7b1ad4bc807b474c40'
+
+    const music = computed(() => {
+      console.log(currentStore.currentSong);
+      return currentStore.currentSong
+    })
+
+    const playStatus = computed(() => {
+      return currentStore.playStatus
+    })
+
+    const togglePlay = () => {
+      const audio = document.getElementById('musicTag')
+      if (audio.paused) {
+        audio.play()
+      } else {
+        audio.pause()
+      }
+      currentStore.setPlayStatus()
+    }
+
+    return {
+      cover,
+      prograssData,
+      music,
+      playStatus,
+      formatTime,
+      togglePlay
+    }
+  }
+}
+
 </script>
 
 <template>
   <div class="player card">
+    <audio id="musicTag" autoplay :src="music.url" />
+
     <div class="cover">
       <div class="border"></div>
-      <img :src="cover" />
+      <img
+        :src="music.picUrl || cover"
+        :class="[playStatus ? '' : 'pause', 'playing']"
+      />
       <div class="center"></div>
     </div>
 
     <div class="info">
       <div class="name-wrap">
         <h2 class="slide">
-          <span class="name">隐身守候</span>
+          <span class="name">{{ music.name || '开始聆听...' }}</span>
         </h2>
       </div>
-      <p class="author">朱茵</p>
+      <p class="author" v-if="music.authors">
+        <template v-for="(item, index) in music.authors" :key="index">
+          {{ item.name }}
+          {{ index === music.authors.length - 1 ? '' : ' / ' }}
+        </template>
+      </p>
+      <p v-else>暂无</p>
     </div>
 
     <div class="progress">
@@ -30,12 +78,15 @@ const cover = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duita
           :style="{ height: item + 'px' }"
         ></div>
       </template>
-      <span class="time">3:27</span>
+      <span class="time">{{ formatTime(music.duration) }}</span>
     </div>
 
     <div class="control">
       <i class="iconfont icon-prev"></i>
-      <i class="iconfont icon-play"></i>
+      <i
+        :class="[playStatus ? 'icon-pause' : 'icon-play', 'iconfont']"
+        @click="togglePlay()"
+      ></i>
       <i class="iconfont icon-next"></i>
     </div>
     <div class="operation">
@@ -48,6 +99,20 @@ const cover = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duita
 </template>
 
 <style lang="stylus" scoped>
+@keyframes rotation
+  from
+    -webkit-transform: rotate(0deg)
+
+  to
+    -webkit-transform: rotate(360deg)
+
+.playing
+  animation: rotation 20s linear infinite
+  animation-play-state: running
+
+.pause
+  animation-play-state: paused
+
 .player
   display: flex
   flex-direction: column
@@ -121,7 +186,10 @@ const cover = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duita
   display: flex
   align-items: center
 
-.icon-play
+i
+  cursor: pointer
+
+.icon-play, .icon-pause
   font-size: 30px
 
 .icon-prev, .icon-next

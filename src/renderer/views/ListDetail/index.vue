@@ -1,5 +1,5 @@
 <script>
-import { onMounted, reactive, ref, toRefs, toRef } from 'vue'
+import { onMounted, reactive, toRefs } from 'vue'
 import { useRoute, onBeforeRouteLeave } from 'vue-router'
 import { listDetail } from '@renderer/api/netease'
 import defaultImg from '@renderer/assets/images/placeholder.png'
@@ -25,22 +25,26 @@ export default {
         createTime: res.createTime,
         updateTime: res.updateTime,
         count: res.songCount,
-        tags:  res.tags,
+        tags: res.tags,
         picUrl: res.picUrl,
         name: res.name
       }
       currentSotre.setCurrentBrowseList(currentList)
-      console.log(res);
     })
 
     onBeforeRouteLeave(() => {
-        currentSotre.setCurrentBrowseList({})
+      currentSotre.setCurrentBrowseList({})
     })
+
+    const playMusic = (song) => {
+      currentSotre.setCurrentSong(song)
+    }
 
     return {
       ...toRefs(data),
       defaultImg,
-      formatTime
+      formatTime,
+      playMusic
     }
   }
 }
@@ -80,7 +84,7 @@ export default {
 
     <div class="list">
       <template v-for="(item, index) in detail.songsDetail" :key="index">
-        <div class="song">
+        <div class="song" @dblclick="playMusic(item)">
           <span class="title">
             <span>{{ item.name }}</span>
             <span v-if="item.tns" class="subtitle">{{

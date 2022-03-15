@@ -46,12 +46,15 @@ export const listDetail = async (id) => {
     n: 100000,
     s: 8
   }
-  
-  const { playlist } = await request('https://music.163.com/api/v6/playlist/detail', {
-    method: 'POST',
-    headers: buildHeaders(),
-    data: builderData(data, 'api')
-  })
+
+  const { playlist } = await request(
+    'https://music.163.com/api/v6/playlist/detail',
+    {
+      method: 'POST',
+      headers: buildHeaders(),
+      data: builderData(data, 'api')
+    }
+  )
   const result = {
     name: playlist.name,
     picUrl: playlist.coverImgUrl,
@@ -68,14 +71,37 @@ export const listDetail = async (id) => {
   data = {
     c: params
   }
-  const songsDetail = await request('https://music.163.com/weapi/v3/song/detail', {
-    method: 'POST',
-    headers: buildHeaders(),
-    data: builderData(data, 'weapi')
-  })
+  const songsDetail = await request(
+    'https://music.163.com/weapi/v3/song/detail',
+    {
+      method: 'POST',
+      headers: buildHeaders(),
+      data: builderData(data, 'weapi')
+    }
+  )
   result.songsDetail = songsDetail.songs
   result.privileges = songsDetail.privileges
   return result
+}
+
+/**
+ * 获取音乐
+ * @param {*} id 歌曲 ID
+ */
+export const music = (id) => {
+  const data = {
+    ids: '[' + id + ']',
+    br: 999000
+  }
+  return request(
+    'https://interface3.music.163.com/eapi/song/enhance/player/url',
+    {
+      method: 'POST',
+      headers: buildHeaders(),
+      data: builderData(data, 'eapi'),
+      crypto: true
+    }
+  )
 }
 
 const builderData = (data, type) => {
