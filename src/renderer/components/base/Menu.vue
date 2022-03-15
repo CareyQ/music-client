@@ -1,17 +1,23 @@
 <script setup>
 import { Menu } from '@renderer/router/modules/menu'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const navigate = (router) => {
+  console.log(router);
+  router.push({path: router})
+}
 </script>
 
 <template>
   <div class="menu">
-    <template v-for="(item, index) in Menu" :key="index">
-      <router-link v-slot="{ navigate }" :to="item.path" custom>
-        <span class="menu-item top-bg" role="link" @click="navigate">
+
+      <router-link v-for="item in Menu" :key="item.path" :to="item.path" v-slot="{navigate, isActive}" custom>
+        <span class="menu-item top-bg" role="link" :class="isActive ? 'active' : ''" @click="navigate(item.path)">
           <i :class="'iconfont icon-' + item.meta?.icon"></i>
           <span>{{ item.meta?.title }}</span>
         </span>
       </router-link>
-    </template>
+
   </div>
 </template>
 

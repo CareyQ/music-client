@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, session } = require('electron')
 const path = require('path')
 
 require('electron-reload')(path.join(__dirname, 'build'))
@@ -19,7 +19,11 @@ function createWindow() {
   win.webContents.openDevTools({ mode: 'detach' })
 }
 
-app.whenReady().then(() => {
+const vueDevToolsPath = path.resolve('C:/Users/CareyQ/AppData/Local/Microsoft/Edge/User Data/Default/Extensions/ljjemllljcmogpfapbkkighbhhppjdbg/6.0.0.21_0')
+
+app.whenReady().then(async () => {
+  await session.defaultSession.loadExtension(vueDevToolsPath)
+
   createWindow()
 
   app.on('activate', () => {

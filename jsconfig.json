@@ -6,6 +6,7 @@
       "@renderer/*": ["src/renderer/*"],
       "@static/*": ["src/static/*"],
       "@common/*": ["src/common/*"],
+      "@store/*": ["src/renderer/store/*"]
     }
   },
   "exclude": ["node_modules", "build", "dist"]

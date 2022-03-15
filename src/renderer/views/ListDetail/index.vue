@@ -1,22 +1,40 @@
 <script>
 import { onMounted, reactive, ref, toRefs, toRef } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, onBeforeRouteLeave } from 'vue-router'
 import { listDetail } from '@renderer/api/netease'
 import defaultImg from '@renderer/assets/images/placeholder.png'
 import { formatTime } from '@renderer/utils/util'
+import { useCurrentStore } from '@store/modules/current'
 
 export default {
   setup() {
     const route = useRoute()
-    const id = route.query.id
+    const currentSotre = useCurrentStore()
+
     let data = reactive({
       detail: {}
     })
 
+    const id = route.query.id
     onMounted(async () => {
       const res = await listDetail(id)
       data.detail = res
+      const currentList = {
+        authorId: res.authorId,
+        authorName: res.authorName,
+        createTime: res.createTime,
+        updateTime: res.updateTime,
+        count: res.songCount,
+        tags:  res.tags,
+        picUrl: res.picUrl,
+        name: res.name
+      }
+      currentSotre.setCurrentBrowseList(currentList)
       console.log(res);
+    })
+
+    onBeforeRouteLeave(() => {
+        currentSotre.setCurrentBrowseList({})
     })
 
     return {
@@ -131,6 +149,10 @@ export default {
 
 .desc
   font-size: 14px
+  display: -webkit-box
+  -webkit-box-orient: vertical
+  -webkit-line-clamp: 3
+  overflow: hidden
 
 .info-btn
   position: absolute
